@@ -3,19 +3,28 @@ import "./styles.css"
 import { useState } from "react";
 
 interface namesType { 
-  id: number; 
-  name: string; 
-  sex: "f"|"m"; 
+  id: number, 
+  name: string, 
+  sex: string
 }
 
 function App(): JSX.Element {
   const [typedMessage, setTypedMessage] = useState("");
-  const mapData =(data:{ id: number; name: string; sex: string; }[]) => {
-    return data.map((name:{ id: number; name: string; sex: string; })=> <button key={name.id} className={name.sex==="f"?"girl":"boy"}> {name.name} </button>)
+  const [favourites, setFavourites] = useState<JSX.Element[]>([])
+  const mapData =(data:namesType[]) => {
+    return data.map((name:namesType,index)=> <button key={name.id} className={name.sex==="f"?"girl":"boy"} onClick={()=>handleFavourite(name.name,name.id,name.sex)}> {name.name} </button>)
   }
-  const filterData = (data:{ id: number; name: string; sex: string; }[])=>{
+  const filterData = (data:namesType[])=>{
     const filteredData = data.filter(profile=> (profile.name.slice(0,typedMessage.length)===(typedMessage.charAt(0).toUpperCase() + typedMessage.slice(1))));
     return mapData(filteredData);
+  }
+
+  const handleFavourite=(name:string,id:number, sex:string) => {
+    setFavourites(prev => [...prev, <button key={id} className={sex==="f"?"girl":"boy"} onClick={()=>handleUnfavourite(id)}>{name}</button>])
+  }
+
+  const handleUnfavourite = (thisId:number)=>{
+    setFavourites(prev => ([...prev].filter(element=> (element.key!==thisId))))
   }
 
   return (
@@ -33,6 +42,7 @@ function App(): JSX.Element {
           setTypedMessage(event.target.value);
         }}
       />
+      <p>Favourites: {favourites}</p>
     {typedMessage.length===0 ? mapData(data) : filterData(data)}
    </section>
   )
