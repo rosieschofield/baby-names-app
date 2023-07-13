@@ -10,45 +10,46 @@ interface namesType {
 
 function App(): JSX.Element {
   const [typedMessage, setTypedMessage] = useState("");
-  const [favourites, setFavourites] = useState<JSX.Element[]>([])
+  const [favourites, setFavourites] = useState<namesType[]>([])
   //currently filtering & gender not connected - but could rewrite so that firstly a filteredData variable is filtered from the outset
   //names set to mapData(filteredData)
   //changed using useState where if a gender button is pressed filteredData if filtered for gender 
   //and then mapped and changed in setNames() via 3 different gender functions
 
+  const sortedData = data.sort((a, b) => a.name.localeCompare(b.name))
+  
   const mapData =(data:namesType[]) => {
-    const sortedData = data.sort((a, b) => a.name.localeCompare(b.name))
-    return sortedData.map((name:namesType,index)=> <button key={name.id} className={name.sex==="f"?"girl":"boy"} onClick={()=>handleFavourite(name.name,name.id,name.sex)}> {name.name} </button>)
+    return data.map((name:namesType,index)=> <button key={name.id} className={name.sex==="f"?"girl":"boy"} onClick={()=>handleFavourite(name.name,name.id,name.sex)}> {name.name} </button>)
   }
-  const filterData = (data:namesType[])=>{
-    const filteredData = data.filter(profile=> (profile.name.slice(0,typedMessage.length)===(typedMessage.charAt(0).toUpperCase() + typedMessage.slice(1))));
-    return (mapData(filteredData));
+  
+  const filterData = (data:namesType[])=> {
+    return data.filter(profile=> (profile.name.slice(0,typedMessage.length)===(typedMessage.charAt(0).toUpperCase() + typedMessage.slice(1))));
   }
 
-  const [names, setNames]=useState(mapData(data))
+  const [names, setNames]=useState(sortedData)
 
   const handleFavourite=(name:string,id:number, sex:string) => {
-    setFavourites(prev => [...prev, <button key={id} className={sex==="f"?"girl":"boy"} onClick={()=>handleUnfavourite(id)}>{name}</button>])
-  }
-
-  const handleUnfavourite = (thisId:number)=>{
-    setFavourites(prev => ([...prev].filter(element=> (element.key!==thisId))))
+    let alreadyHere = false;
+    favourites.forEach((babyName)=>{ if (name ===babyName["name"]) {alreadyHere=true}})
+    alreadyHere? setFavourites(prev => ([...prev].filter(element=> (element["id"]!==id)))) : 
+    setFavourites(prev => [...prev, {id: id, name: name, sex: sex}])
   }
 
   const handleJustBoys = ()=>{
-    setNames(mapData(data.filter(profile=> (profile.sex==="m"))))
+    setNames(sortedData.filter(profile=> (profile.sex==="m")))
   }
 
   const handleJustGirls = ()=>{
-    setNames(mapData(data.filter(profile=> (profile.sex==="f"))))
+    setNames(sortedData.filter(profile=> (profile.sex==="f")))
   }
 
   const handleAllNames = ()=>{
-    setNames(mapData(data));
+    setNames(sortedData);
   }
 
   return (
    <section>
+    <h1>Baby Names 👶 🔤</h1>
     <input
         // 1st direction binding: state -> input value
         value={typedMessage}
@@ -65,8 +66,8 @@ function App(): JSX.Element {
        <button  onClick={handleAllNames}>All</button>
       <button className ="boy" onClick={handleJustBoys}>Boys</button>
       <button className ="girl" onClick={handleJustGirls}>Girls</button>
-      <p>Favourites: {favourites}</p>
-    {typedMessage.length===0 ? names: filterData(data)}
+      <p>Favourites: {mapData(favourites)}</p>
+    {typedMessage.length===0 ? mapData(names): mapData(filterData(names))}
    </section>
   )
 }

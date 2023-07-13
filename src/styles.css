@@ -1,7 +1,23 @@
+*{
+    text-align: center
+}
+
+input{
+    margin: 5px;
+    text-align: left;
+}
+
 .girl{
     background-color: #90e0ef;
+    color: #1e454d;
 }
 
 .boy{
-    background-color: #d9ed92;
+    background-color: #92ed92;
+    color: #105210;
+}
+
+button{
+    border-radius: 7px;
+    margin: 2px;
 }
