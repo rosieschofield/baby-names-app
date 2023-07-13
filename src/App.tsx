@@ -31,8 +31,13 @@ function App(): JSX.Element {
   const handleFavourite=(name:string,id:number, sex:string) => {
     let alreadyHere = false;
     favourites.forEach((babyName)=>{ if (name ===babyName["name"]) {alreadyHere=true}})
-    alreadyHere? setFavourites(prev => ([...prev].filter(element=> (element["id"]!==id)))) : 
-    setFavourites(prev => [...prev, {id: id, name: name, sex: sex}])
+    if (alreadyHere){
+      setFavourites(prev => ([...prev].filter(element=> (element["id"]!==id))));
+      setNames(prev => [...prev, {id: id, name: name, sex: sex}].sort((a, b) => a.name.localeCompare(b.name)));
+    } else {
+      setFavourites(prev => [...prev, {id: id, name: name, sex: sex}])
+      setNames(prev => ([...prev].filter(element=> (element["id"]!==id))));
+    } 
   }
 
   const handleJustBoys = ()=>{
