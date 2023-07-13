@@ -1,23 +1,23 @@
-*{
-    text-align: center;
+* {
+  text-align: center;
 }
 
-input{
-    margin: 5px;
-    text-align: left;
+input {
+  margin: 5px;
+  text-align: left;
 }
 
-.girl{
-    background-color: #90e0ef;
-    color: #1e454d;
+.girl {
+  background-color: #90e0ef;
+  color: #1e454d;
 }
 
-.boy{
-    background-color: #92ed92;
-    color: #105210;
+.boy {
+  background-color: #92ed92;
+  color: #105210;
 }
 
-button{
-    border-radius: 7px;
-    margin: 2px;
+button {
+  border-radius: 7px;
+  margin: 2px;
 }
